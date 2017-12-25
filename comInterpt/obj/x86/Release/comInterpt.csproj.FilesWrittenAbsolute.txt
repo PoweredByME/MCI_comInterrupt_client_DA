@@ -1,0 +1,10 @@
+/Users/apple/Projects/comInterpt/comInterpt/obj/x86/Release/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/comInterpt.exe.mdb
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/comInterpt.exe
+/Users/apple/Projects/comInterpt/comInterpt/obj/x86/Release/comInterpt.exe
+/Users/apple/Projects/comInterpt/comInterpt/obj/x86/Release/comInterpt.exe.mdb
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/comInterpt.pdb
+/Users/apple/Projects/comInterpt/comInterpt/obj/x86/Release/comInterpt.pdb
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/Newtonsoft.Json.dll
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/crypto.dll
+/Users/apple/Projects/comInterpt/comInterpt/bin/Release/Pubnub.dll
