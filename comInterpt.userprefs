@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{81CBE21F-1C0E-430D-97E6-06E65A784813}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="comInterpt/Program.cs">
     <Files>
-      <File FileName="comInterpt/Program.cs" Line="12" Column="42" />
+      <File FileName="comInterpt/Program.cs" Line="167" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />

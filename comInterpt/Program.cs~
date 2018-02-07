@@ -3,58 +3,102 @@ using System.Net;
 using System.Text;
 using System.IO.Ports;
 using System.Threading;
+using System.IO;
 
 
 namespace comInterpt
 {
 	class MainClass
 	{
-		const string webPort = "3070";
-		const string Prefix = "http://+:"+webPort+"/";
+		const string d_comPort = "COM3", d_p_comPort = "COM2", d_webPort = "3070"; // default comports
+
+		static string webPort = "";
+		static string Prefix = "";
 		static HttpListener Listener = null;
 		static int RequestNumber = 0;
 		static readonly DateTime StartupDate = DateTime.UtcNow;
+		const int comport_baudrate = 230400;
+		const Parity comport_parity = Parity.None;
+		const int comport_databits = 8;
+		const StopBits comport_stopbit = StopBits.One;
+		const Handshake comport_handshake = Handshake.None;
+		const string position_comPort_ack = "a";
+		const string pressure_comPort_ack = "a";
+		static string comPort = ""; // com port for position input controller
+		static string p_comPort = ""; // com port for pressure input controller
+		static SerialPort _serialport, _p_serialport;
 
-		static string comPort = "COM3";
-		static SerialPort _serialport;
-		const  short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5;
+
+		const short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5, LP_DAT = 6, RP_DAT = 7;  // *P_DAT = Pressure input data index(-L- left or -R- right).
 		const short x_ASCII = 120, y_ASCII = 121, z_ASCII = 122,
 					u_ASCII = 117, v_ASCII = 118, w_ASCII = 119,
 					X_ASCII = 88, Y_ASCII = 89, Z_ASCII = 90,
-					U_ASCII = 85, V_ASCII = 86, W_ASCII = 87, zero_ASCII = 79;
-		static int[] ctrl_data = new int[6] {0,0,0,0,0,0};
+					U_ASCII = 85, V_ASCII = 86, W_ASCII = 87, zero_ASCII = 79,
+
+					left_p_ASCII = 0,   // *_p_ASCII = pressure input decrease ASCII (left or right)
+					right_p_ASCII = 0,
+					left_P_ASCII = 0,	// *_P_ASCII = pressure input increase ASCII (left or right)
+					right_P_ASCII = 0
+					; 
+		static int[] ctrl_data = new int[8] {0,0,0,0,0,0,0,0};
+
 		public static void Main(string[] args)
 		{
-			
-			Console.WriteLine("Enter the COM port to listen for input: ");
-			comPort = Console.ReadLine().Trim();
-			comPort = comPort == "" ? "COM3" : comPort;
-			Console.WriteLine("Listening to the port ... " + comPort);
-			_serialport = new SerialPort(comPort, 230400, Parity.None, 8, StopBits.One);
-			_serialport.Handshake = Handshake.None;
+			getPorts();
+
+			// Create comport connections
+			_serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+			_serialport.Handshake = comport_handshake;
 			_serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
+			_p_serialport = new SerialPort(p_comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+			_p_serialport.Handshake = comport_handshake;
+			_p_serialport.DataReceived += new SerialDataReceivedEventHandler(p_sp_DataRecieved);
+
+
+
 			try{
+				// opening position input comport
 				_serialport.Open();
 				if(_serialport.IsOpen){
-					_serialport.Write("a");
+					_serialport.Write(position_comPort_ack);
+				}else{
+					print(comPort + " could not be opened check connection");
+					return;
 				}
-			}catch(Exception ex){
-				Console.WriteLine(ex.Message);
-			}
-			if (!HttpListener.IsSupported)
-			{
-				Console.WriteLine("HttpListener is not supported on this platform.");
+
+				// opening pressure input comport 
+				_p_serialport.Open();
+				if(_p_serialport.IsOpen){
+					_p_serialport.Write(pressure_comPort_ack);
+				}else{
+					print(p_comPort + " could not be opened check connection");
+					return;
+				}
+
+			}catch(IOException ex){
+				print("ComPorts not working! \nError : "+ ex.Message +"\nCheck if you HAVE connected controllers correctly to : \n" +
+				      "1. Position Input Controller : " + comPort + "\n2. Pressure Input Controller : " + p_comPort);
 				return;
 			}
+			catch(Exception ex){
+				print(ex.Message);
+				return;
+			}
+
+			if (!HttpListener.IsSupported)
+			{
+				print("Http Listener is not supported on this platform.");
+				return;
+			}
+
 			using (Listener = new HttpListener())
 			{
 				Listener.Prefixes.Add(Prefix);
 				Listener.Start();
 				// Begin waiting for requests.
 				Listener.BeginGetContext(GetContextCallback, null);
-				Console.WriteLine("Listening to http://localhost:" + webPort + "/");
-				Console.WriteLine("Close the application to end the session.");
-				Console.WriteLine ("Listening Now : ");
+				printLocalHostAndPortData(); 
+
 				for (;;) {};
 			}
 		}
@@ -74,15 +118,14 @@ namespace comInterpt
 				// get the request
 				var NowTime = DateTime.UtcNow;
 
-				//Console.WriteLine("{0}: {1}", NowTime.ToString("R"), context.Request.RawUrl);
-
-
-				var responseString = string.Format(ctrl_data[X_DAT] + "," +
-											   ctrl_data[Y_DAT] + "," +
-											   ctrl_data[Z_DAT] + "," +
-											   ctrl_data[U_DAT] + "," +
-											   ctrl_data[V_DAT] + "," +
-											   ctrl_data[W_DAT]
+				var responseString = string.Format(	ctrl_data[X_DAT] + "," +
+											   		ctrl_data[Y_DAT] + "," +
+											   		ctrl_data[Z_DAT] + "," +
+											   		ctrl_data[U_DAT] + "," +
+											   		ctrl_data[V_DAT] + "," +
+											   		ctrl_data[W_DAT] + "," + 
+				                                   	ctrl_data[LP_DAT] + "," +
+				                                   	ctrl_data[RP_DAT]
 											  );
 
 				byte[] buffer = Encoding.UTF8.GetBytes(responseString);
@@ -102,15 +145,16 @@ namespace comInterpt
 				response.OutputStream.Write(buffer, 0, buffer.Length);
 				response.OutputStream.Close();
 			}catch(Exception ex){
-				Console.WriteLine(ex.Message);
+				print(ex.Message);
 			}
 		}
 
+		// when input is recieved from the position input controller
 		static void sp_DataRecieved(object sender, SerialDataReceivedEventArgs e){
 			try
 			{
 				int data = _serialport.ReadChar();
-				Console.WriteLine("Data Read = " + data);
+				print("Data Read (position inpot controller) = " +  data.ToString());
 				if (data == zero_ASCII)
 				{
 					ctrl_data = new int[6] { 0, 0, 0, 0, 0, 0 };
@@ -166,19 +210,85 @@ namespace comInterpt
 				else{
 					// do something	
 				}
+				printCTRLData();
 
-
-				Console.WriteLine("X = " + ctrl_data[X_DAT]);
-				Console.WriteLine("Y = " + ctrl_data[Y_DAT]);
-				Console.WriteLine("Z = " + ctrl_data[Z_DAT]);
-				Console.WriteLine("U = " + ctrl_data[U_DAT]);
-				Console.WriteLine("V = " + ctrl_data[V_DAT]);
-				Console.WriteLine("W = " + ctrl_data[W_DAT]);
 			}catch(Exception ex){
-				Console.WriteLine(ex.Message);
+				print(ex.Message);
 			}
 
 		}
 
+			
+		// when input is recieved from the pressure input controller
+		static void p_sp_DataRecieved(object sender, SerialDataReceivedEventArgs e){
+			try{
+				int data = _p_serialport.ReadChar();
+				print("Data Read (position inpot controller) = " + data.ToString());
+				if(data == left_p_ASCII){
+					ctrl_data[LP_DAT]--;
+				}else if(data == right_p_ASCII){
+					ctrl_data[RP_DAT]--;
+				}else if(data == left_P_ASCII){
+					ctrl_data[LP_DAT]++;
+				}else if(data == right_P_ASCII){
+					ctrl_data[RP_DAT]++;
+				}else{
+					// do something
+				}
+				printCTRLData();
+			}catch(Exception ex){
+				print(ex.Message);
+			}
+		}
+
+
+		// get required port information
+		static void getPorts(){
+			// Ask for local server (localhost) port numeber 
+			Console.WriteLine("Enter the local server port - defualt 3070 - (Press Enter) : ");
+			webPort = Console.ReadLine().Trim();
+			webPort = webPort == "" ? d_webPort : webPort;
+			Prefix = "http://+:" + webPort + "/";
+
+			// Ask for position input controller comport
+			Console.WriteLine("Enter the COM port to listen for input (default COM3): ");
+			comPort = Console.ReadLine().Trim();
+			comPort = comPort == "" ? d_comPort : comPort;
+
+			// Ask for pressure input controller comport
+			Console.WriteLine("Enter the COM port to listen for input (default COM2): ");
+			p_comPort = Console.ReadLine().Trim();
+			p_comPort = p_comPort == "" ? d_p_comPort : p_comPort;
+		}
+
+
+	
+
+		// print the data in the control data list
+		static void printCTRLData(){
+			Console.WriteLine("X = " + ctrl_data[X_DAT]);
+			Console.WriteLine("Y = " + ctrl_data[Y_DAT]);
+			Console.WriteLine("Z = " + ctrl_data[Z_DAT]);
+			Console.WriteLine("U = " + ctrl_data[U_DAT]);
+			Console.WriteLine("V = " + ctrl_data[V_DAT]);
+			Console.WriteLine("W = " + ctrl_data[W_DAT]);
+			Console.WriteLine("Left Pressure = " + ctrl_data[LP_DAT]);
+			Console.WriteLine("Right Pressure = " + ctrl_data[RP_DAT]);
+		}
+
+		static void printLocalHostAndPortData(){
+			print("Local Server : localhost:" + webPort);
+			print("Listening to the port (position input controller)... " + comPort);
+			print("Listening to the port (pressure input controller)... " + p_comPort);
+			print("\nListening to http://localhost:" + webPort + "/");
+			print("Close the application to end the session.");
+			print("Listening Now : ");
+		}
+
+		static void print(string msg){
+			Console.WriteLine(msg);
+		}
+
+	
 	}
 }
