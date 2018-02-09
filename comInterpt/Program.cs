@@ -260,33 +260,40 @@ namespace comInterpt
 		{
 			try
 			{
-				int data = _p_serialport.ReadChar();
+				string s_data = _p_serialport.ReadExisting();
 
-				print("Data Read (pressure input controller) = " + data.ToString());//_p_serialport.ReadLine());//
-				if (data == left_p_ASCII)
-				{
-					ctrl_data[LP_DAT]--;
+
+
+				foreach(char c in s_data){
+					int data = c;
+					print("Data Read (pressure input controller) = " + data.ToString());//_p_serialport.ReadLine());//
+					if (data == left_p_ASCII)
+					{
+						ctrl_data[LP_DAT]--;
+					}
+					else if (data == right_p_ASCII)
+					{
+						ctrl_data[RP_DAT]--;
+					}
+					else if (data == left_P_ASCII)
+					{
+						ctrl_data[LP_DAT]++;
+					}
+					else if (data == right_P_ASCII)
+					{
+						ctrl_data[RP_DAT]++;
+					}
+					else if (data == p_zero_ACII)
+					{
+						ctrl_data[RP_DAT] = 0;
+						ctrl_data[LP_DAT] = 0;
+					}
+					else
+					{
+						// do something
+					}
+					printCTRLData();
 				}
-				else if (data == right_p_ASCII)
-				{
-					ctrl_data[RP_DAT]--;
-				}
-				else if (data == left_P_ASCII)
-				{
-					ctrl_data[LP_DAT]++;
-				}
-				else if (data == right_P_ASCII)
-				{
-					ctrl_data[RP_DAT]++;
-				}else if (data == p_zero_ACII){
-					ctrl_data[RP_DAT] = 0;
-					ctrl_data[LP_DAT] = 0;
-				}
-				else
-				{
-					// do something
-				}
-				printCTRLData();
 				//save_ctrl_data_To_TextFile();
 			}
 			catch (Exception ex)
