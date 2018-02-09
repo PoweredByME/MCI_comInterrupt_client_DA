@@ -185,67 +185,71 @@ namespace comInterpt
 		{
 			try
 			{
-				int data = _serialport.ReadChar();
-				print("Data Read (position input controller) = " + data.ToString());
-				if (data == zero_ASCII)
+				string s_data = _serialport.ReadExisting();
+				foreach (char c in s_data)
 				{
-					ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0 , ctrl_data[LP_DAT], ctrl_data[RP_DAT]};
-				}
-				else if (data == x_ASCII)
-				{
-					ctrl_data[X_DAT]--;
-				}
-				else if (data == X_ASCII)
-				{
-					ctrl_data[X_DAT]++;
-				}
-				else if (data == y_ASCII)
-				{
-					ctrl_data[Y_DAT]--;
-				}
-				else if (data == Y_ASCII)
-				{
-					ctrl_data[Y_DAT]++;
-				}
-				else if (data == z_ASCII)
-				{
-					ctrl_data[Z_DAT]--;
-				}
-				else if (data == Z_ASCII)
-				{
-					ctrl_data[Z_DAT]++;
-				}
-				else if (data == u_ASCII)
-				{
-					ctrl_data[U_DAT]--;
-				}
-				else if (data == U_ASCII)
-				{
-					ctrl_data[U_DAT]++;
-				}
-				else if (data == v_ASCII)
-				{
-					ctrl_data[V_DAT]--;
-				}
-				else if (data == V_ASCII)
-				{
-					ctrl_data[V_DAT]++;
-				}
-				else if (data == w_ASCII)
-				{
-					ctrl_data[W_DAT]--;
-				}
-				else if (data == W_ASCII)
-				{
-					ctrl_data[W_DAT]++;
-				}
-				else
-				{
-					// do something	
-				}
-				printCTRLData();
-				//save_ctrl_data_To_TextFile();
+					int data = c;
+					print("Data Read (position input controller) = " + data.ToString());
+					if (data == zero_ASCII)
+					{
+						ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, ctrl_data[LP_DAT], ctrl_data[RP_DAT] };
+					}
+					else if (data == x_ASCII)
+					{
+						ctrl_data[X_DAT]--;
+					}
+					else if (data == X_ASCII)
+					{
+						ctrl_data[X_DAT]++;
+					}
+					else if (data == y_ASCII)
+					{
+						ctrl_data[Y_DAT]--;
+					}
+					else if (data == Y_ASCII)
+					{
+						ctrl_data[Y_DAT]++;
+					}
+					else if (data == z_ASCII)
+					{
+						ctrl_data[Z_DAT]--;
+					}
+					else if (data == Z_ASCII)
+					{
+						ctrl_data[Z_DAT]++;
+					}
+					else if (data == u_ASCII)
+					{
+						ctrl_data[U_DAT]--;
+					}
+					else if (data == U_ASCII)
+					{
+						ctrl_data[U_DAT]++;
+					}
+					else if (data == v_ASCII)
+					{
+						ctrl_data[V_DAT]--;
+					}
+					else if (data == V_ASCII)
+					{
+						ctrl_data[V_DAT]++;
+					}
+					else if (data == w_ASCII)
+					{
+						ctrl_data[W_DAT]--;
+					}
+					else if (data == W_ASCII)
+					{
+						ctrl_data[W_DAT]++;
+					}
+					else
+					{
+						// do something	
+					}
+					printCTRLData();
+					//save_ctrl_data_To_TextFile();
 
+				}
 			}
 			catch (Exception ex)
 			{
