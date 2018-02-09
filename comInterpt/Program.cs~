@@ -22,7 +22,7 @@ namespace comInterpt
 		const Parity comport_parity = Parity.None;
 		const int comport_databits = 8;
 		const StopBits comport_stopbit = StopBits.One;
-		const Handshake comport_handshake = Handshake.None;
+		//const Handshake comport_handshake = Handshake.None;
 		const string position_comPort_ack = "a";
 		const string pressure_comPort_ack = "b";
 		static string comPort = ""; // com port for position input controller
@@ -50,10 +50,10 @@ namespace comInterpt
 
 			// Create comport connections
 			_serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
-			_serialport.Handshake = comport_handshake;
+			//_serialport.Handshake = comport_handshake;
 			_serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
 			_p_serialport = new SerialPort(p_comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
-			_p_serialport.Handshake = comport_handshake;
+			//_p_serialport.Handshake = comport_handshake;
 			_p_serialport.DataReceived += new SerialDataReceivedEventHandler(p_sp_DataRecieved);
 
 
