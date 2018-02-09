@@ -49,9 +49,9 @@ namespace comInterpt
 			getPorts();
 
 			// Create comport connections
-			//_serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
-			//_serialport.Handshake = comport_handshake;
-			//_serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
+			_serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+			_serialport.Handshake = comport_handshake;
+			_serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
 			_p_serialport = new SerialPort(p_comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
 			_p_serialport.Handshake = comport_handshake;
 			_p_serialport.DataReceived += new SerialDataReceivedEventHandler(p_sp_DataRecieved);
@@ -61,7 +61,7 @@ namespace comInterpt
 			try
 			{
 				// opening position input comport
-				/*_serialport.Open();
+				_serialport.Open();
 				if (_serialport.IsOpen)
 				{
 					_serialport.Write(position_comPort_ack);
@@ -71,7 +71,7 @@ namespace comInterpt
 					print(comPort + " could not be opened check connection");
 					Console.ReadLine();
 					return;
-				}*/
+				}
 
 				// opening pressure input comport 
 				_p_serialport.Open();
@@ -189,7 +189,7 @@ namespace comInterpt
 				print("Data Read (position input controller) = " + data.ToString());
 				if (data == zero_ASCII)
 				{
-					ctrl_data = new int[6] { 0, 0, 0, 0, 0, 0 };
+					ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0 , ctrl_data[LP_DAT], ctrl_data[RP_DAT]};
 				}
 				else if (data == x_ASCII)
 				{
@@ -321,12 +321,12 @@ namespace comInterpt
 		// print the data in the control data list
 		static void printCTRLData()
 		{
-			/*Console.WriteLine("X = " + ctrl_data[X_DAT]);
+			Console.WriteLine("X = " + ctrl_data[X_DAT]);
 			Console.WriteLine("Y = " + ctrl_data[Y_DAT]);
 			Console.WriteLine("Z = " + ctrl_data[Z_DAT]);
 			Console.WriteLine("U = " + ctrl_data[U_DAT]);
 			Console.WriteLine("V = " + ctrl_data[V_DAT]);
-			Console.WriteLine("W = " + ctrl_data[W_DAT]);*/
+			Console.WriteLine("W = " + ctrl_data[W_DAT]);
 			Console.WriteLine("Left Pressure = " + ctrl_data[LP_DAT]);
 			Console.WriteLine("Right Pressure = " + ctrl_data[RP_DAT]);
 		}
