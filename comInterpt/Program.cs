@@ -37,9 +37,10 @@ namespace comInterpt
 					U_ASCII = 85, V_ASCII = 86, W_ASCII = 87, zero_ASCII = 79,
 
 					left_p_ASCII = 113,   // *_p_ASCII = pressure input decrease ASCII (left or right)
-					right_p_ASCII = 120,
+					right_p_ASCII = 112,
 					left_P_ASCII = 81,   // *_P_ASCII = pressure input increase ASCII (left or right)
-					right_P_ASCII = 88
+					right_P_ASCII = 80,
+					p_zero_ACII = 79
 					;
 		static int[] ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -185,7 +186,7 @@ namespace comInterpt
 			try
 			{
 				int data = _serialport.ReadChar();
-				print("Data Read (position inpot controller) = " + data.ToString());
+				print("Data Read (position input controller) = " + data.ToString());
 				if (data == zero_ASCII)
 				{
 					ctrl_data = new int[6] { 0, 0, 0, 0, 0, 0 };
@@ -260,7 +261,7 @@ namespace comInterpt
 			try
 			{
 				int data = _p_serialport.ReadChar();
-				print("Data Read (position inpot controller) = " + data.ToString());
+				print("Data Read (pressure input controller) = " + data.ToString());
 				if (data == left_p_ASCII)
 				{
 					ctrl_data[LP_DAT]--;
@@ -276,6 +277,9 @@ namespace comInterpt
 				else if (data == right_P_ASCII)
 				{
 					ctrl_data[RP_DAT]++;
+				}else if (data == p_zero_ACII){
+					ctrl_data[RP_DAT] = 0;
+					ctrl_data[LP_DAT] = 0;
 				}
 				else
 				{
