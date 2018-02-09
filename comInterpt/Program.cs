@@ -186,10 +186,11 @@ namespace comInterpt
 			try
 			{
 				string s_data = _serialport.ReadExisting();
+				print("Processing POSITION CONTROLLER Input ...");
 				foreach (char c in s_data)
 				{
 					int data = c;
-					print("Data Read (position input controller) = " + data.ToString());
+					//print("Data Read (position input controller) = " + data.ToString());
 					if (data == zero_ASCII)
 					{
 						ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, ctrl_data[LP_DAT], ctrl_data[RP_DAT] };
@@ -246,10 +247,10 @@ namespace comInterpt
 					{
 						// do something	
 					}
-					printCTRLData();
-					//save_ctrl_data_To_TextFile();
 
+					//save_ctrl_data_To_TextFile();
 				}
+                printCTRLData();
 			}
 			catch (Exception ex)
 			{
@@ -266,11 +267,11 @@ namespace comInterpt
 			{
 				string s_data = _p_serialport.ReadExisting();
 
-
+				print("Processing PRESSURE CONTROLLER input..."); 
 
 				foreach(char c in s_data){
 					int data = c;
-					print("Data Read (pressure input controller) = " + data.ToString());//_p_serialport.ReadLine());//
+					//print("Data Read (pressure input controller) = " + data.ToString());//_p_serialport.ReadLine());//
 					if (data == left_p_ASCII)
 					{
 						ctrl_data[LP_DAT]--;
@@ -296,8 +297,9 @@ namespace comInterpt
 					{
 						// do something
 					}
-					printCTRLData();
+
 				}
+                printCTRLData();
 				//save_ctrl_data_To_TextFile();
 			}
 			catch (Exception ex)
