@@ -260,10 +260,10 @@ namespace comInterpt
 		{
 			try
 			{
-				//int data = _p_serialport.ReadChar();
+				int data = _p_serialport.ReadChar();
 
-				print("Data Read (pressure input controller) = " + _p_serialport.ReadLine());//data.ToString());
-				/*if (data == left_p_ASCII)
+				print("Data Read (pressure input controller) = " + data.ToString());//_p_serialport.ReadLine());//
+				if (data == left_p_ASCII)
 				{
 					ctrl_data[LP_DAT]--;
 				}
@@ -285,7 +285,7 @@ namespace comInterpt
 				else
 				{
 					// do something
-				}*/
+				}
 				printCTRLData();
 				//save_ctrl_data_To_TextFile();
 			}
