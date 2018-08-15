@@ -28,7 +28,8 @@ namespace comInterpt
 		static string comPort = ""; // com port for position input controller
 		static string p_comPort = ""; // com port for pressure input controller
 		static SerialPort _serialport, _p_serialport;
-
+        static bool initPortsDone = false;
+        static bool shouldInitPorts = false;
 
 		const short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5, LP_DAT = 6, RP_DAT = 7;  // *P_DAT = Pressure input data index(-L- left or -R- right).
 		const short x_ASCII = 120, y_ASCII = 121, z_ASCII = 122,
@@ -46,58 +47,8 @@ namespace comInterpt
 
 		public static void Main(string[] args)
 		{
-			getPorts();
-
-			// Create comport connections
-			_serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
-			_serialport.Handshake = comport_handshake;
-			_serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
-			_p_serialport = new SerialPort(p_comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
-			_p_serialport.Handshake = comport_handshake;
-			_p_serialport.DataReceived += new SerialDataReceivedEventHandler(p_sp_DataRecieved);
-
-
-
-			try
-			{
-				// opening position input comport
-				_serialport.Open();
-				if (_serialport.IsOpen)
-				{
-					_serialport.Write(position_comPort_ack);
-				}
-				else
-				{
-					print(comPort + " could not be opened check connection");
-					Console.ReadLine();
-					return;
-				}
-
-				// opening pressure input comport 
-				_p_serialport.Open();
-				if (_p_serialport.IsOpen)
-				{
-					_p_serialport.Write(pressure_comPort_ack);
-				}
-				else
-				{
-					print(p_comPort + " could not be opened check connection");
-					Console.ReadLine();
-					return;
-				}
-
-			}
-			catch (IOException ex)
-			{
-				print("ComPorts not working! \nError : " + ex.Message + "\nCheck if you HAVE connected controllers correctly to : \n" +
-					  "1. Position Input Controller : " + comPort + "\n2. Pressure Input Controller : " + p_comPort);
-
-			}
-			catch (Exception ex)
-			{
-				print(ex.Message);
-			}
-
+            getPorts();
+			
 			if (!HttpListener.IsSupported)
 			{
 				print("Http Listener is not supported on this platform.");
@@ -116,8 +67,9 @@ namespace comInterpt
 					Listener.Start();
 					// Begin waiting for requests.
 					Listener.BeginGetContext(GetContextCallback, null);
-					printLocalHostAndPortData();
-					save_ctrl_data_To_TextFile();
+                    print("Local server init done...");
+                    print("Listening to http://localhost:" + webPort + "/");
+                    save_ctrl_data_To_TextFile();
 
 					for (;;)
 					{
@@ -134,8 +86,20 @@ namespace comInterpt
 
 		static void GetContextCallback(IAsyncResult ar)
 		{
+            if(shouldInitPorts && !initPortsDone){
+                initPorts();
+                print("Com Ports init..");
+                printLocalHostAndPortData(); 
+                initPortsDone = true;
+            }
+
+
 			try
 			{
+                if (!shouldInitPorts){
+                    shouldInitPorts = true;
+                    return;
+                }
 				int req = ++RequestNumber;
 
 				// Get the context
@@ -329,6 +293,60 @@ namespace comInterpt
 			p_comPort = p_comPort == "" ? d_p_comPort : p_comPort;
 		}
 
+
+        static void initPorts(){
+
+            // Create comport connections
+            _serialport = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+            _serialport.Handshake = comport_handshake;
+            _serialport.DataReceived += new SerialDataReceivedEventHandler(sp_DataRecieved);
+            _p_serialport = new SerialPort(p_comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+            _p_serialport.Handshake = comport_handshake;
+            _p_serialport.DataReceived += new SerialDataReceivedEventHandler(p_sp_DataRecieved);
+
+
+
+            try
+            {
+                // opening position input comport
+                _serialport.Open();
+                if (_serialport.IsOpen)
+                {
+                    _serialport.Write(position_comPort_ack);
+                }
+                else
+                {
+                    print(comPort + " could not be opened check connection");
+                    Console.ReadLine();
+                    return;
+                }
+
+                // opening pressure input comport 
+                _p_serialport.Open();
+                if (_p_serialport.IsOpen)
+                {
+                    _p_serialport.Write(pressure_comPort_ack);
+                }
+                else
+                {
+                    print(p_comPort + " could not be opened check connection");
+                    Console.ReadLine();
+                    return;
+                }
+
+            }
+            catch (IOException ex)
+            {
+                print("ComPorts not working! \nError : " + ex.Message + "\nCheck if you HAVE connected controllers correctly to : \n" +
+                      "1. Position Input Controller : " + comPort + "\n2. Pressure Input Controller : " + p_comPort);
+
+            }
+            catch (Exception ex)
+            {
+                print(ex.Message);
+            }
+
+        }
 
 
 
