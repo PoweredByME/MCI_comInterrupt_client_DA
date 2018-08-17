@@ -28,8 +28,8 @@ namespace comInterpt
 		static string comPort = ""; // com port for position input controller
 		static string p_comPort = ""; // com port for pressure input controller
 		static SerialPort _serialport, _p_serialport;
-        static bool initPortsDone = false;
-        static bool shouldInitPorts = false;
+        //static bool initPortsDone = false;
+        //static bool shouldInitPorts = false;
 
 		const short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5, LP_DAT = 6, RP_DAT = 7;  // *P_DAT = Pressure input data index(-L- left or -R- right).
 		const short x_ASCII = 120, y_ASCII = 121, z_ASCII = 122,
@@ -48,6 +48,7 @@ namespace comInterpt
 		public static void Main(string[] args)
 		{
             getPorts();
+            initPorts(); 
 			
 			if (!HttpListener.IsSupported)
 			{
@@ -86,20 +87,21 @@ namespace comInterpt
 
 		static void GetContextCallback(IAsyncResult ar)
 		{
+            /*
             if(shouldInitPorts && !initPortsDone){
                 initPorts();
                 print("Com Ports init..");
                 printLocalHostAndPortData(); 
                 initPortsDone = true;
-            }
+            }*/
 
 
 			try
 			{
-                if (!shouldInitPorts){
+                /*if (!shouldInitPorts){
                     shouldInitPorts = true;
                     return;
-                }
+                }*/
 				int req = ++RequestNumber;
 
 				// Get the context
@@ -293,7 +295,7 @@ namespace comInterpt
 			p_comPort = p_comPort == "" ? d_p_comPort : p_comPort;
 		}
 
-        static string releventString = "";
+        /*static string releventString = "";
         static bool releventStringRecieved = false;
         static SerialPort sp;
         static void checkReleventDevice(object sender, SerialDataReceivedEventArgs e){
@@ -324,7 +326,7 @@ namespace comInterpt
                 throw new Exception("Relevent devices not found on any of the com ports");
             }
             return sp;
-        }
+        }*/
 
         static void initPorts(){
 
