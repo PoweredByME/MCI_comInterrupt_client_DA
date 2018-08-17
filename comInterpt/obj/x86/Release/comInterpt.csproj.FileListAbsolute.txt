@@ -1,0 +1,12 @@
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/comInterpt.exe
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/comInterpt.pdb
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.dll
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Newtonsoft.Json.dll
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Pubnub.dll
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Newtonsoft.Json.xml
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.pdb
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.xml
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csprojResolveAssemblyReference.cache
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csproj.CoreCompileInputs.cache
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.exe
+/home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.pdb
