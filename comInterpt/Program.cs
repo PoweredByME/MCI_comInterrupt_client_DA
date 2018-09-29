@@ -60,7 +60,7 @@ namespace comInterpt
             foreach (var _port in portsList)
             {
                 // for position controller
-                var _p = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                var _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
                 _p.Handshake = comport_handshake;
                 _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
                 try
@@ -74,7 +74,7 @@ namespace comInterpt
                         {
                             Thread.Sleep(1);
                             if(_positionControler_portAck){
-                                d_comPort = _port;
+                                comPort = _port;
                                 break;
                             }
                         }
@@ -89,7 +89,7 @@ namespace comInterpt
 
             foreach(var _port in portsList){
                 // for pressure controller
-                var _p = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                var _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
                 _p.Handshake = comport_handshake;
                 _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
                 try
@@ -104,7 +104,7 @@ namespace comInterpt
                             Thread.Sleep(1);
                             if (_pressureControler_portAck)
                             {
-                                d_p_comPort = _port;
+                                p_comPort = _port;
                                 break;
                             }
                         }
