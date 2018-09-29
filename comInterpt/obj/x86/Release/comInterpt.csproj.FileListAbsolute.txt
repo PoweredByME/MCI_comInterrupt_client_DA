@@ -10,3 +10,16 @@
 /home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csproj.CoreCompileInputs.cache
 /home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.exe
 /home/saad/Desktop/HARD_DISK/projects/cSharpProjects/MCI/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.pdb
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/comInterpt.exe
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/comInterpt.pdb
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.dll
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Newtonsoft.Json.dll
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Pubnub.dll
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/Newtonsoft.Json.xml
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.pdb
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/bin/Release/crypto.xml
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csprojAssemblyReference.cache
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csproj.CoreCompileInputs.cache
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.csproj.CopyComplete
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.exe
+/Volumes/My Passport/Saad Ahmad MAC/Projects/CSharpProjects/MCI_comInterrupt_client_DA/comInterpt/obj/x86/Release/comInterpt.pdb

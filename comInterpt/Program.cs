@@ -36,6 +36,8 @@ namespace comInterpt
 					u_ASCII = 117, v_ASCII = 118, w_ASCII = 119,
 					X_ASCII = 88, Y_ASCII = 89, Z_ASCII = 90,
 					U_ASCII = 85, V_ASCII = 86, W_ASCII = 87, zero_ASCII = 79,
+                    S_ASCII = 83, H_ASCII = 72,
+
 
 					left_p_ASCII = 113,   // *_p_ASCII = pressure input decrease ASCII (left or right)
 					right_p_ASCII = 112,
@@ -45,7 +47,9 @@ namespace comInterpt
 					;
 		static int[] ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-		public static void Main(string[] args)
+        static int[] set_ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        public static void Main(string[] args)
 		{
             getPorts();
             initPorts(); 
@@ -209,9 +213,32 @@ namespace comInterpt
 					{
 						ctrl_data[W_DAT]++;
 					}
-					else
+                    else if (data == p_zero_ACII){
+                        ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+                        ctrl_data[X_DAT] = 0;
+                        ctrl_data[Y_DAT] = 0;
+                        ctrl_data[Z_DAT] = 0;
+                        ctrl_data[U_DAT] = 0;
+                        ctrl_data[V_DAT] = 0;
+                        ctrl_data[W_DAT] = 0;
+                    }else if (data == S_ASCII){
+                        set_ctrl_data[X_DAT] = ctrl_data[X_DAT];
+                        set_ctrl_data[Y_DAT] = ctrl_data[Y_DAT];
+                        set_ctrl_data[Z_DAT] = ctrl_data[Z_DAT];
+                        set_ctrl_data[U_DAT] = ctrl_data[U_DAT];
+                        set_ctrl_data[V_DAT] = ctrl_data[V_DAT];
+                        set_ctrl_data[W_DAT] = ctrl_data[W_DAT];
+                    }else if (data == H_ASCII){
+                        ctrl_data[X_DAT] = set_ctrl_data[X_DAT];
+                        ctrl_data[Y_DAT] = set_ctrl_data[Y_DAT];
+                        ctrl_data[Z_DAT] = set_ctrl_data[Z_DAT];
+                        ctrl_data[U_DAT] = set_ctrl_data[U_DAT];
+                        ctrl_data[V_DAT] = set_ctrl_data[V_DAT];
+                        ctrl_data[W_DAT] = set_ctrl_data[W_DAT];
+                    }
+                    else
 					{
-						// do something	
+					   	// do something	
 					}
 
 					//save_ctrl_data_To_TextFile();
@@ -258,8 +285,16 @@ namespace comInterpt
 					{
 						ctrl_data[RP_DAT] = 0;
 						ctrl_data[LP_DAT] = 0;
-					}
-					else
+                    }else if(data == S_ASCII){
+                        set_ctrl_data[RP_DAT] = ctrl_data[RP_DAT];
+                        set_ctrl_data[LP_DAT] = ctrl_data[LP_DAT];
+                    }
+                    else if (data == H_ASCII)
+                    {
+                        ctrl_data[RP_DAT] = set_ctrl_data[RP_DAT];
+                        ctrl_data[LP_DAT] = set_ctrl_data[LP_DAT];
+                    }
+                    else
 					{
 						// do something
 					}
