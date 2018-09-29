@@ -31,13 +31,17 @@ namespace comInterpt
         //static bool initPortsDone = false;
         //static bool shouldInitPorts = false;
 
-		const short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5, LP_DAT = 6, RP_DAT = 7;  // *P_DAT = Pressure input data index(-L- left or -R- right).
-		const short x_ASCII = 120, y_ASCII = 121, z_ASCII = 122,
+		const short X_DAT = 0, Y_DAT = 1, Z_DAT = 2, U_DAT = 3, V_DAT = 4, W_DAT = 5, LP_DAT = 6, RP_DAT = 7, POS_CTRL_SENSITIVITY = 8, PRES_CTRL_SENSITIVITY = 9;  // *P_DAT = Pressure input data index(-L- left or -R- right).
+		/*
+            For the sensitivity controller, G -> 1, J -> 2, K -> 3, M -> 4
+        */
+
+        const short x_ASCII = 120, y_ASCII = 121, z_ASCII = 122,
 					u_ASCII = 117, v_ASCII = 118, w_ASCII = 119,
 					X_ASCII = 88, Y_ASCII = 89, Z_ASCII = 90,
 					U_ASCII = 85, V_ASCII = 86, W_ASCII = 87, zero_ASCII = 79,
                     S_ASCII = 83, H_ASCII = 72,
-
+                    G_ASCII = 71, J_ASCII = 74, K_ASCII = 75, M_ASCII = 77, I_ASCII = 73,
 
 					left_p_ASCII = 113,   // *_p_ASCII = pressure input decrease ASCII (left or right)
 					right_p_ASCII = 112,
@@ -45,9 +49,9 @@ namespace comInterpt
 					right_P_ASCII = 80,
 					p_zero_ACII = 79
 					;
-		static int[] ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+        static int[] ctrl_data = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-        static int[] set_ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+        static int[] set_ctrl_data = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         public static void Main(string[] args)
 		{
@@ -124,7 +128,9 @@ namespace comInterpt
 											   		ctrl_data[V_DAT] + "," +
 											   		ctrl_data[W_DAT] + "," +
 													   ctrl_data[LP_DAT] + "," +
-													   ctrl_data[RP_DAT]
+													   ctrl_data[RP_DAT] + "," +
+                                                   ctrl_data[POS_CTRL_SENSITIVITY] + "," +
+                                                   ctrl_data[PRES_CTRL_SENSITIVITY]
 											  );
 
 				byte[] buffer = Encoding.UTF8.GetBytes(responseString);
@@ -235,6 +241,20 @@ namespace comInterpt
                         ctrl_data[U_DAT] = set_ctrl_data[U_DAT];
                         ctrl_data[V_DAT] = set_ctrl_data[V_DAT];
                         ctrl_data[W_DAT] = set_ctrl_data[W_DAT];
+                    }else if (data == G_ASCII){
+                        ctrl_data[POS_CTRL_SENSITIVITY] = 1;
+                    }else if (data == J_ASCII){
+                        ctrl_data[POS_CTRL_SENSITIVITY] = 2;
+                    }else if (data == K_ASCII){
+                        ctrl_data[POS_CTRL_SENSITIVITY] = 3;
+                    }
+                    else if (data == M_ASCII)
+                    {
+                        ctrl_data[POS_CTRL_SENSITIVITY] = 4;
+                    }
+                    else if (data == I_ASCII)
+                    {
+                        ctrl_data[POS_CTRL_SENSITIVITY] = 5;
                     }
                     else
 					{
@@ -294,7 +314,27 @@ namespace comInterpt
                         ctrl_data[RP_DAT] = set_ctrl_data[RP_DAT];
                         ctrl_data[LP_DAT] = set_ctrl_data[LP_DAT];
                     }
-                    else
+                    else if (data == G_ASCII)
+                    {
+                        ctrl_data[PRES_CTRL_SENSITIVITY] = 1;
+                    }
+                    else if (data == J_ASCII)
+                    {
+                        ctrl_data[PRES_CTRL_SENSITIVITY] = 2;
+                    }
+                    else if (data == K_ASCII)
+                    {
+                        ctrl_data[PRES_CTRL_SENSITIVITY] = 3;
+                    }
+                    else if (data == M_ASCII)
+                    {
+                        ctrl_data[PRES_CTRL_SENSITIVITY] = 4;
+                    }
+                    else if (data == I_ASCII)
+                    {
+                        ctrl_data[PRES_CTRL_SENSITIVITY] = 5;
+                    }
+                    else 
 					{
 						// do something
 					}
