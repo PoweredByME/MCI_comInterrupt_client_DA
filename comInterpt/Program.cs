@@ -11,7 +11,7 @@ namespace comInterpt
 {
 	class MainClass
 	{
-		const string d_comPort = "COM3", d_p_comPort = "COM4", d_webPort = "3070"; // default comports
+		static string d_comPort = "COM3", d_p_comPort = "COM4", d_webPort = "3070"; // default comports
 
 		static string webPort = "";
 		static string Prefix = "";
@@ -49,11 +49,111 @@ namespace comInterpt
 
         static int[] set_ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
+        public static void searchControllerPort(){
+            webPort = "3070";//Console.ReadLine().Trim();
+            webPort = webPort == "" ? d_webPort : webPort;
+            Prefix = "http://localhost:" + webPort + "/";
+
+
+
+            var portsList = SerialPort.GetPortNames();
+            foreach (var _port in portsList)
+            {
+                // for position controller
+                var _p = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                _p.Handshake = comport_handshake;
+                _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
+                try
+                {
+                    _p.Open();
+                    if (_p.IsOpen)
+                    {
+                        _positionControler_portAck = false;
+                        _p.Write("a");
+                        for (int i = 0; i < 100; i++)
+                        {
+                            Thread.Sleep(1);
+                            if(_positionControler_portAck){
+                                d_comPort = _port;
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                }
+
+                _p.Close();
+            }
+
+            foreach(var _port in portsList){
+                // for pressure controller
+                var _p = new SerialPort(comPort, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                _p.Handshake = comport_handshake;
+                _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
+                try
+                {
+                    _p.Open();
+                    if (_p.IsOpen)
+                    {
+                        _pressureControler_portAck = false;
+                        _p.Write("b");
+                        for (int i = 0; i < 100; i++)
+                        {
+                            Thread.Sleep(1);
+                            if (_pressureControler_portAck)
+                            {
+                                d_p_comPort = _port;
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                _p.Close();
+
+            }
+        }
+
+        static bool _positionControler_portAck = false;
+        static void _positionControl_testPort_dataReceived(object sender, SerialDataReceivedEventArgs e){
+            string s_data = _serialport.ReadExisting();
+            if(s_data == "a"){
+                _positionControler_portAck = true;
+            }
+        }
+
+        static bool _pressureControler_portAck = false;
+        static void _pressureControl_testPort_dataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string s_data = _serialport.ReadExisting();
+            if (s_data == "b")
+            {
+                _pressureControler_portAck = true;
+            }
+        }
+
+
         public static void Main(string[] args)
 		{
-            getPorts();
-            initPorts(); 
-			
+            searchControllerPort();
+            if(!_positionControler_portAck || !_pressureControler_portAck){
+                Console.WriteLine("Could not seach the controller on comports.");
+                Console.WriteLine("PLEASE MANUALLY ENTER THE COMPORTS");
+                getPorts();
+            }
+
+            initPorts();
+
+
+
+
+
 			if (!HttpListener.IsSupported)
 			{
 				print("Http Listener is not supported on this platform.");
