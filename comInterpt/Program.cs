@@ -49,6 +49,7 @@ namespace comInterpt
 
         static int[] set_ctrl_data = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
+        static SerialPort _p = null;
         public static void searchControllerPort(){
             webPort = "3070";//Console.ReadLine().Trim();
             webPort = webPort == "" ? d_webPort : webPort;
@@ -60,7 +61,7 @@ namespace comInterpt
             foreach (var _port in portsList)
             {
                 // for position controller
-                var _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
                 _p.Handshake = comport_handshake;
                 _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
                 try
@@ -89,7 +90,7 @@ namespace comInterpt
 
             foreach(var _port in portsList){
                 // for pressure controller
-                var _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
+                _p = new SerialPort(_port, comport_baudrate, comport_parity, comport_databits, comport_stopbit);
                 _p.Handshake = comport_handshake;
                 _p.DataReceived += new SerialDataReceivedEventHandler(_positionControl_testPort_dataReceived);
                 try
@@ -122,7 +123,7 @@ namespace comInterpt
 
         static bool _positionControler_portAck = false;
         static void _positionControl_testPort_dataReceived(object sender, SerialDataReceivedEventArgs e){
-            string s_data = _serialport.ReadExisting();
+            string s_data = _p.ReadExisting();
             if(s_data == "a"){
                 _positionControler_portAck = true;
             }
@@ -131,7 +132,7 @@ namespace comInterpt
         static bool _pressureControler_portAck = false;
         static void _pressureControl_testPort_dataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string s_data = _serialport.ReadExisting();
+            string s_data = _p.ReadExisting();
             if (s_data == "b")
             {
                 _pressureControler_portAck = true;
